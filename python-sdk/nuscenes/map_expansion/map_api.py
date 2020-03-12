@@ -463,10 +463,10 @@ class NuScenesMap:
         layers = self.explorer.layers_on_point(x, y)
         rel_layers = {layer: layers[layer] for layer in road_layers}
 
-        # Pick most fine-grained road layer (lane, road_block, road_segment) object that contains the point.
+        # TODO: figure out what this is supposed to do
         rel_layer = None
         rel_token = None
-        for layer in road_layers[::-1]:
+        for layer in road_layers:
             if rel_layers[layer] != '':
                 rel_layer = layer
                 rel_token = rel_layers[layer]
@@ -1271,14 +1271,14 @@ class NuScenesMapExplorer:
             for record in records:
                 polygons = [self.map_api.extract_polygon(polygon_token) for polygon_token in record['polygon_tokens']]
                 for polygon in polygons:
-                    if point.within(polygon):
+                    if point.touches(polygon):
                         return record['token']
                     else:
                         pass
         else:
             for record in records:
                 polygon = self.map_api.extract_polygon(record['polygon_token'])
-                if point.within(polygon):
+                if point.touches(polygon):
                     return record['token']
                 else:
                     pass
